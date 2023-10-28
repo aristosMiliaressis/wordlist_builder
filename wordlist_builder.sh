@@ -190,7 +190,7 @@ do
 done
 filter_duplicates $out_dir/directories.txt
 
-cat $out_dir/directories_lowercase.txt | lowercase | $out_dir/directories_lowercase.txt
+cat $out_dir/directories_lowercase.txt | lowercase > $out_dir/directories_lowercase.txt
 
 for list in "${iis_asp_wordlists[@]}"
 do
