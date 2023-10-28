@@ -168,7 +168,7 @@ done
 grep_high_impact_extensions | anew $out_dir/high_impact.txt >/dev/null
 filter_duplicates $out_dir/high_impact.txt
 
-cat $out_dir/high_impact.txt | lowercase | $out_dir/high_impact_lowercase.txt
+cat $out_dir/high_impact.txt | lowercase | tee $out_dir/high_impact_lowercase.txt
 
 for list in "${file_lists[@]}"
 do
