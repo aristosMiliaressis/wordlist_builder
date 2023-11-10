@@ -162,22 +162,13 @@ normalize_prefix() {
 }
 
 filter_junk() {
-	LC_ALL='en_US.UTF-8'
 	read_from_stdin \
-		| rev | cut -d '/' -f 1 | cut -d '\' -f 1 | rev \
-		| grep -E '[A-Za-z0-9]' \
+		| LC_ALL='en_US.UTF-8' rev | cut -d '/' -f 1 | cut -d '\' -f 1 | LC_ALL='en_US.UTF-8' rev \
+		| grep -iP '^[A-Z0-9\._\- \(\)~]+$' \
 		| grep -Ev '.{100,}' \
-		| grep -a -v 'filename:' \
 		| grep -v '\.\.' \
-		| grep -v \* \
-		| grep -v '#' \
-		| grep -v '%' \
-		| grep -v '&' \
-		| grep -v "??" \
-		| grep -v "$$" \
+		| grep -v '\.\/' \
 		| grep -v '\- ' \
-		| grep -v '>>' \
-		| grep -v '::' \
 		| filter_recursive_deadends \
 		| awk '!x[$0]++'
 }
@@ -188,12 +179,12 @@ filter_files() {
 }
 
 grep_high_impact_extensions() {
-	grep -a -hirE '\.(log|ovpn|bz2|tgz|bzip2|pem|crt|key|gzip|settings|setting|passwd|sh|pac|swp|sav|bak|backup|tar|zip|7z|gz|lz|xz|z|rar|war|db|sqlite|sqlitedb|sqlite3|mdb|sql|ini|cfg|conf|config|properties|ppk|env|rdp|pgp|psql)$' \
+	grep -hirE '\.(log|ovpn|bz2|tgz|bzip2|pem|crt|key|gzip|settings|setting|passwd|sh|pac|swp|sav|bak|backup|tar|zip|7z|gz|lz|xz|z|rar|war|db|sqlite|sqlitedb|sqlite3|mdb|sql|ini|cfg|conf|config|properties|ppk|env|rdp|pgp|psql)~?$' \
 		| filter_junk
 }
 
 grep_all_extensions() {
-	grep -a -hirE '\.(log|bz2|tgz|bzip2|pac|key|gzip|txt|inc|passwd|out|pac|swp|sav|lst|bak|backup|bkpold|tar|zip|7z|gz|rar|iso|db|sqlite|sqlite3|mdb|sql|ini|conf|cfg|config|properties|json|xml|dtd|xslt|yml|yaml|csv|dat|xls|xlsx|pem|crt|ppk|sh|exs|env|tpl|swf|reg|rdp|pwl|pub|old|cache|pgp|psql|site|dtd|xslt|war|default|bkp|sav|lst|img|cur|ai|data|bat|bin|msi|tmp|eml|epl|ssi|ssf)$' \
+	grep -hirE '\.(log|bz2|tgz|bzip2|pac|key|gzip|txt|inc|passwd|out|pac|swp|sav|lst|bak|backup|bkpold|tar|zip|7z|gz|rar|iso|db|sqlite|sqlite3|mdb|sql|ini|conf|cfg|config|properties|json|xml|dtd|xslt|yml|yaml|csv|dat|xls|xlsx|pem|crt|ppk|sh|exs|env|tpl|swf|reg|rdp|pwl|pub|old|cache|pgp|psql|site|dtd|xslt|war|default|bkp|sav|lst|img|cur|ai|data|bat|bin|msi|tmp|eml|epl|ssi|ssf)~?$' \
 		| filter_junk
 }
 
@@ -215,8 +206,8 @@ filter_duplicates() {
 
 deduplicate() {
 	temp=`mktemp`
-	cat $1 > $temp
-	read_from_stdin | anew $temp
+	cat $2 > $temp
+	cat $1 | anew -q $temp
 }
 
 export -f read_from_stdin
@@ -233,19 +224,18 @@ echo "${high_impact_lists[@]}" \
 	| tr  ' ' '\n' \
 	| parallel -j+0 "curl -s {} | anew -q $out_dir/high_impact.txt"
 
-grep_high_impact_extensions | anew $out_dir/high_impact.txt >/dev/null
+grep_high_impact_extensions | anew -q $out_dir/high_impact.txt
 filter_duplicates $out_dir/high_impact.txt
 
-cat $out_dir/high_impact.txt | lowercase | tee $out_dir/high_impact_lowercase.txt
+cat $out_dir/high_impact.txt | lowercase > $out_dir/high_impact_lowercase.txt
 
 echo "${file_lists[@]}" \
 	| tr  ' ' '\n' \
 	| parallel -j+0 "curl -s {} | normalize_prefix | filter_junk | anew -q $out_dir/large_files.txt"
 
-grep_all_extensions | anew $out_dir/large_files.txt >/dev/null
+grep_all_extensions | anew -q $out_dir/large_files.txt
 filter_duplicates $out_dir/large_files.txt
-cat $out_dir/large_files.txt | deduplicate $out_dir/high_impact.txt > $out_dir/dedublicated_large_files.txt
-
+#deduplicate $out_dir/large_files.txt $out_dir/high_impact.txt > $out_dir/dedublicated_large_files.txt
 
 echo "${directory_lists[@]}" \
 	| tr  ' ' '\n' \
@@ -293,7 +283,7 @@ filter_duplicates $out_dir/tech/django.txt
 # # do
 	# # temp=`mktemp`
 	# # curl -s $list -o $temp
-	# # cat $temp | normalize_prefix | filter_junk | anew $out_dir/tech/flask.txt >/dev/null
+	# # cat $temp | normalize_prefix | filter_junk | anew -q $out_dir/tech/flask.txt
 	# # rm $temp
 # # done
 # # filter_duplicates $out_dir/tech/flask.txt
@@ -302,7 +292,7 @@ filter_duplicates $out_dir/tech/django.txt
 # # do
 	# # temp=`mktemp`
 	# # curl -s $list -o $temp
-	# # cat $temp | normalize_prefix | filter_junk | anew $out_dir/tech/express.txt >/dev/null
+	# # cat $temp | normalize_prefix | filter_junk | anew -q $out_dir/tech/express.txt
 	# # rm $temp
 # # done
 # # filter_duplicates $out_dir/tech/express.txt

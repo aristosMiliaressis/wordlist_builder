@@ -71,6 +71,7 @@ cgi-bin/printenv
 cgi-bin/printenv.pl
 cgi-bin/test-cgi
 __clockwork/app
+common/config.php.new
 console
 config.ru
 darkstat/
