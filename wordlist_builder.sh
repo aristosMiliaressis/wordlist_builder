@@ -202,6 +202,10 @@ filter_recursive_deadends() {
 		| grep -Eiv '^(img|image|images|font|fonts|css|style|styles|resources|assets)[\/]*$'
 }
 
+lowercase() {
+	read_from_stdin | tr '[:upper:]' '[:lower:]' | awk '!x[$0]++'
+}
+
 filter_duplicates() {
 	temp=`mktemp`
 	cat $1 | awk '!x[$0]++' > $temp
@@ -232,6 +236,8 @@ echo "${high_impact_lists[@]}" \
 grep_high_impact_extensions | anew $out_dir/high_impact.txt >/dev/null
 filter_duplicates $out_dir/high_impact.txt
 
+cat $out_dir/high_impact.txt | lowercase | tee $out_dir/high_impact_lowercase.txt
+
 echo "${file_lists[@]}" \
 	| tr  ' ' '\n' \
 	| parallel -j+0 "curl -s {} | normalize_prefix | filter_junk | anew -q $out_dir/large_files.txt"
@@ -246,6 +252,8 @@ echo "${directory_lists[@]}" \
 	| parallel -j+0 "curl -s {} | normalize_prefix | filter_junk | filter_recursive_deadends | filter_files | anew -q $out_dir/directories.txt"
 
 filter_duplicates $out_dir/directories.txt
+
+cat $out_dir/directories.txt | lowercase > $out_dir/directories_lowercase.txt
 
 echo "${iis_asp_wordlists[@]}" \
 	| tr  ' ' '\n' \
