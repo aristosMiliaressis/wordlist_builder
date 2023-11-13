@@ -42,6 +42,7 @@ high_impact_lists=(
 	"https://raw.githubusercontent.com/six2dez/OneListForAll/main/dict/ini_long.txt"
 	"https://raw.githubusercontent.com/danielmiessler/SecLists/master/Discovery/Web-Content/apache.txt"
 	"https://raw.githubusercontent.com/six2dez/OneListForAll/main/dict/nginx_short.txt"
+	"https://raw.githubusercontent.com/SooLFaa/fuzzing/master/webserver/iis.txt"
 	"https://raw.githubusercontent.com/danielmiessler/SecLists/master/Discovery/Web-Content/UnixDotfiles.fuzz.txt"
 	"https://wordlists-cdn.assetnote.io/data/manual/bak.txt"
 	"https://raw.githubusercontent.com/danielmiessler/SecLists/master/Discovery/Web-Content/Common-DB-Backups.txt"
@@ -166,8 +167,8 @@ normalize_prefix() {
 }
 
 filter_junk() {
+	#| LC_ALL='en_US.UTF-8' rev | cut -d '/' -f 1 | cut -d '\' -f 1 | LC_ALL='en_US.UTF-8' rev \
 	read_from_stdin \
-		| LC_ALL='en_US.UTF-8' rev | cut -d '/' -f 1 | cut -d '\' -f 1 | LC_ALL='en_US.UTF-8' rev \
 		| grep -iP '^[A-Z0-9\._\- \(\)/~]+$' \
 		| grep -Ev '.{100,}' \
 		| grep -v '\.\.' \
