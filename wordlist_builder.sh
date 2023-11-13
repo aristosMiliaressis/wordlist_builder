@@ -35,6 +35,13 @@ general=(
 )
 
 high_impact_lists=( 
+	"https://raw.githubusercontent.com/danielmiessler/SecLists/master/Discovery/Web-Content/swagger.txt"
+	"https://raw.githubusercontent.com/six2dez/OneListForAll/main/dict/config_long.txt"
+	"https://raw.githubusercontent.com/six2dez/OneListForAll/main/dict/git_config_short.txt"
+	"https://raw.githubusercontent.com/six2dez/OneListForAll/main/dict/htaccess_short.txt"
+	"https://raw.githubusercontent.com/six2dez/OneListForAll/main/dict/ini_long.txt"
+	"https://raw.githubusercontent.com/danielmiessler/SecLists/master/Discovery/Web-Content/apache.txt"
+	"https://raw.githubusercontent.com/six2dez/OneListForAll/main/dict/nginx_short.txt"
 	"https://raw.githubusercontent.com/danielmiessler/SecLists/master/Discovery/Web-Content/UnixDotfiles.fuzz.txt"
 	"https://wordlists-cdn.assetnote.io/data/manual/bak.txt"
 	"https://raw.githubusercontent.com/danielmiessler/SecLists/master/Discovery/Web-Content/Common-DB-Backups.txt"
@@ -53,16 +60,13 @@ high_impact_lists=(
 	"https://raw.githubusercontent.com/six2dez/OneListForAll/main/dict/env_short.txt"
 	"https://raw.githubusercontent.com/six2dez/OneListForAll/main/dict/common-db-backups_short.txt"
 	"https://raw.githubusercontent.com/six2dez/OneListForAll/main/dict/conf_long.txt"
-	"https://raw.githubusercontent.com/six2dez/OneListForAll/main/dict/config_long.txt"
-	"https://raw.githubusercontent.com/six2dez/OneListForAll/main/dict/git_config_short.txt"
-	"https://raw.githubusercontent.com/six2dez/OneListForAll/main/dict/htaccess_short.txt"
-	"https://raw.githubusercontent.com/six2dez/OneListForAll/main/dict/ini_long.txt"
 	"https://raw.githubusercontent.com/six2dez/OneListForAll/main/dict/k8s_short.txt"
 	"https://raw.githubusercontent.com/six2dez/OneListForAll/main/dict/mdb_short.txt"
 	"https://raw.githubusercontent.com/six2dez/OneListForAll/main/dict/mdf_short.txt"
 	"https://raw.githubusercontent.com/six2dez/OneListForAll/main/dict/reverse-proxy-inconsistencies_short.txt"
 	"https://raw.githubusercontent.com/six2dez/OneListForAll/main/dict/proxy-conf_short.txt"
 	"https://raw.githubusercontent.com/six2dez/OneListForAll/main/dict/debug_short.txt"
+	"https://raw.githubusercontent.com/six2dez/OneListForAll/main/dict/jar_short.txt"
 )
 
 file_lists=(
