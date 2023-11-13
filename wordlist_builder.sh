@@ -164,7 +164,7 @@ normalize_prefix() {
 filter_junk() {
 	read_from_stdin \
 		| LC_ALL='en_US.UTF-8' rev | cut -d '/' -f 1 | cut -d '\' -f 1 | LC_ALL='en_US.UTF-8' rev \
-		| grep -iP '^[A-Z0-9\._\- \(\)~]+$' \
+		| grep -iP '^[A-Z0-9\._\- \(\)/~]+$' \
 		| grep -Ev '.{100,}' \
 		| grep -v '\.\.' \
 		| grep -v '\.\/' \
@@ -222,7 +222,7 @@ export -f deduplicate
 
 echo "${high_impact_lists[@]}" \
 	| tr  ' ' '\n' \
-	| parallel -j+0 "curl -s {} | anew -q $out_dir/high_impact.txt"
+	| parallel -j+0 "curl -s {} | filter_junk | anew -q $out_dir/high_impact.txt"
 
 grep_high_impact_extensions | anew -q $out_dir/high_impact.txt
 filter_duplicates $out_dir/high_impact.txt
